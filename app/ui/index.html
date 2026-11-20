@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ZH3 Control · 第三方音频工具</title>
+  <style>
+    :root { color-scheme: dark; --ink: #f1e4cf; --muted: #b6ad9f; --line: #514c45; --orange: #ffa044; --thumb: 21px }
+    * { box-sizing: border-box }
+    [hidden] { display: none !important }
+    body { margin: 0; min-width: 280px; color: var(--ink); background: #202022; font: 15px/1.5 "Segoe UI Variable","Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif; font-variant-numeric: tabular-nums; }
+    button, input { font: inherit }
+    button { color: inherit; cursor: pointer }
+    button:disabled, input:disabled { cursor: default }
+    button:focus-visible, input:focus-visible { outline: 2px solid #ffc48b; outline-offset: 4px }
+    h1, h2, p, dl, dd { margin: 0 }
+    .shell { min-height: 100vh; display: flex; flex-direction: column; background: radial-gradient(ellipse at 19% 48%,#2c2928,transparent 50%),linear-gradient(110deg,#242325,#1c1b1d 70%,#222123) }
+    .hero { isolation: isolate; position: relative; min-height: 226px; height: clamp(226px,36vh,380px); overflow: hidden; flex: none; display: flex; align-items: center; border-bottom: 1px solid var(--line); background: radial-gradient(ellipse at 75% 57%,#373432 0%,#262526 47%,#1e1f20 82%) }
+    .photo { position: absolute; right: 1%; top: 0; width: 59%; height: 100%; z-index: -1; animation: enter .62s ease-out both }
+    .hero-copy { width: 40%; padding: 14px 0 16px; margin-left: clamp(20px,3.9vw,72px); animation: enter .65s ease-out both }
+    .brand-line { display: flex; align-items: center; gap: clamp(10px,1vw,18px) }
+    .brand { display: block; width: clamp(42px,4.5vw,75px); height: auto; flex: none }
+    h1 { font-size: clamp(34px,4.25vw,76px); letter-spacing: -.047em; font-weight: 700; line-height: 1.14; color: #faedda }
+    h1 span { font-weight: 450 }
+    .attribution { color: #d0c4b4; font-size: clamp(13px,1.17vw,19px); line-height: 1.5; margin: 7px 0 15px }
+    .identity { display: flex; align-items: center; gap: .72em; white-space: nowrap; font-size: clamp(14px,1.22vw,21px); line-height: 1.45; margin-bottom: 5px; font-weight: 530 }
+    .conn { display: inline-flex; align-items: center; gap: .45em; border-left: 1px solid #776e65; padding-left: .83em; font-size: .92em }
+    .dot { width: .56em; height: .56em; border-radius: 50%; background: #98938c }
+    .shell:is([data-state="connected"],[data-state="identified"]) .dot { background: #81bd73 }
+    .shell:is([data-state="writing"],[data-state="restarting"],[data-state="detecting"]) .dot { background: var(--orange) }
+    .formats { display: grid; grid-template-columns: max-content 1fr; gap: 1px 10px; font-size: clamp(12px,1.16vw,18px); line-height: 1.55 }
+    .formats dt, .note, .message { color: var(--muted) }
+    .screen { font-family: "Segoe UI",sans-serif; fill: #f7eddf; text-anchor: middle; font-variant-numeric: tabular-nums }
+    .edge { stroke-dasharray: 150 1200; opacity: 0; animation: sweep .85s .1s ease-out both }
+    .shell[data-state="restarting"] .edge { animation: sweep 2s ease-in-out infinite }
+    .stage { flex: 1; display: grid; grid-template-columns: 58% 42%; animation: enter .65s .06s ease-out both }
+    .panel { min-width: 0; padding: clamp(23px,3.9vh,44px) clamp(24px,3.9vw,72px) 30px }
+    .probe { border-left: 1px solid var(--line); padding-inline: clamp(22px,2.65vw,54px) }
+    h2 { font-weight: 620; font-size: clamp(23px,2.45vw,38px); line-height: 1.3; letter-spacing: .02em }
+    .modes { display: flex; gap: 12px; margin: clamp(13px,2.15vh,24px) 0 clamp(15px,2.65vh,27px) }
+    .mode, .action, .dialog-actions button, .retry { border: 1px solid #73695f; border-radius: 8px; background: #ffffff06 }
+    .mode { display: inline-flex; align-items: center; justify-content: center; gap: .55em; min-height: clamp(37px,5.2vh,54px); min-width: min(40%,205px); padding-inline: 12px; font-size: clamp(15px,1.5vw,23px) }
+    button:not(:disabled):hover { background-color: #ffffff12 }
+    .mode[aria-pressed="true"] { border-color: #eea05b; background: #58392050; color: #ffe4c4 }
+    button:disabled { color: #9b9388; border-color: #514d48; background-color: #ffffff03 }
+    .mode svg { width: 1em; height: 1em; display: none }
+    .radio { display: inline-block; width: 1.05em; height: 1.05em; border: 1.5px solid #938777; border-radius: 50%; padding: 3px }
+    .mode[aria-pressed="true"] .radio { border-color: var(--orange) }
+    .mode[aria-pressed="true"] .radio::after { content: ""; display: block; height: 100%; border-radius: 50%; background: var(--orange) }
+    .mode.locked svg { display: block }
+    .mode.locked .radio { display: none }
+    .readout, .current { display: flex; align-items: center }
+    .readout { min-height: 48px; flex-wrap: wrap; column-gap: clamp(12px,1.6vw,27px); line-height: 1.2 }
+    .readout label { font-size: clamp(17px,1.83vw,28px); font-weight: 550 }
+    .number { color: var(--orange); font-weight: 640; letter-spacing: -.04em; line-height: 1.1 }
+    .draft-number { font-size: clamp(39px,4.3vw,65px) }
+    .unit { margin-left: .28em; color: var(--ink); font-size: clamp(18px,1.9vw,29px); letter-spacing: 0; font-weight: 450 }
+    .mark { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-size: clamp(12px,1.26vw,18px); color: #c4baad }
+    .mark i { display: grid; place-items: center; width: 1.32em; height: 1.32em; border-radius: 50%; font-size: .85em; font-style: normal; background: #554e46 }
+    .mark[data-kind="active"] i { background: #526349; color: #dfebcf }
+    .mark:is([data-kind="draft"],[data-kind="pending"]) { color: #eebd8b }
+    .mark:is([data-kind="draft"],[data-kind="pending"]) i { background: #67482d }
+    .slider { margin: clamp(12px,2.15vh,23px) 12px 0; }
+    .slider-line { position: relative; height: 24px; display: flex; align-items: center }
+    .rail { width: 100%; height: 5px; border-radius: 4px; background: linear-gradient(to right,var(--orange) 0 var(--fill,0%),#635d57 var(--fill,0%) 100%) }
+    input[type="range"] { appearance: none; position: absolute; left: calc(5% - var(--thumb)/2); width: calc(95% + var(--thumb)); height: 24px; margin: 0; background: transparent; cursor: pointer; border-radius: 5px }
+    input[type="range"]:disabled { visibility: hidden }
+    input[type="range"]::-webkit-slider-runnable-track { height: 5px; background: transparent }
+    input[type="range"]::-webkit-slider-thumb { appearance: none; width: var(--thumb); height: var(--thumb); margin-top: calc((5px - var(--thumb))/2); background: linear-gradient(140deg,#ffb15b,#ff8725); border: 1px solid #ffca8c; border-radius: 50%; box-shadow: 0 2px 6px #0008 }
+    .ticks { position: relative; height: 32px }
+    .ticks span { position: absolute; height: 6px; width: 1px; background: #a99f92 }
+    .ticks span.major { height: 10px; background: #e2d4be }
+    .ticks b { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: clamp(12px,1.14vw,17px); font-weight: 400; white-space: nowrap }
+    .notice { margin-top: 6px; color: #ff887e; font-weight: 600; font-size: clamp(13px,1.19vw,17px) }
+    .notice:empty { display: none }
+    .note, .message { font-size: clamp(13px,1.2vw,18px); line-height: 1.5; overflow-wrap: anywhere }
+    .message { margin-top: 10px; color: #e4bd95 }
+    .risk-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 12px; color: #d4c4af; font-size: clamp(12px,1.06vw,16px); line-height: 1.55 }
+    .risk-note svg { flex: none; width: 16px; height: 16px; margin-top: .11em; color: #eeb276 }
+    .actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: clamp(13px,2.3vh,26px) }
+    .action { min-width: min(36%,185px); min-height: clamp(36px,5.1vh,54px); padding: 4px 15px; font-size: clamp(15px,1.4vw,22px) }
+    .primary:not(:disabled) { color: #26180f; border-color: #ffb775; background: #ffa14d; font-weight: 620 }
+    .primary:not(:disabled):hover { background: #ffb36c }
+    .probe-head { display: flex; align-items: center; justify-content: space-between }
+    .refresh { display: grid; place-items: center; width: 35px; height: 35px; padding: 6px; border: 0; border-radius: 6px; color: #d8c7b1; background: transparent }
+    .refresh svg { width: 21px; height: 21px }
+    .current { gap: clamp(14px,2.15vw,40px); margin: clamp(21px,3.55vh,43px) 0 clamp(18px,2.55vh,35px) }
+    .current-label { display: grid; gap: 2px; padding-right: clamp(14px,2vw,36px); border-right: 1px solid #71695f; white-space: nowrap; font-size: clamp(16px,1.53vw,25px) }
+    .current-label small { font-size: .92em; color: #d4c7b4 }
+    .current-number { white-space: nowrap; font-size: clamp(38px,4.9vw,78px) }
+    .metrics { width: 100%; border-collapse: collapse; font-size: clamp(15px,1.46vw,23px); white-space: nowrap }
+    .metrics tr { border-block: 1px solid var(--line) }
+    .metrics th, .metrics td { height: clamp(36px,5.65vh,60px); padding: 3px 4px; text-align: right; font-weight: 400 }
+    .metrics th { text-align: left }
+    .wait { min-height: clamp(204px,29vh,325px); display: flex; flex-direction: column; justify-content: center; align-items: flex-start }
+    .wait-line { width: min(235px,70%); height: 2px; margin: 0 0 18px; background: #9e704540; position: relative; overflow: hidden }
+    .wait-line::before { content: ""; position: absolute; width: 55%; inset-block: 0; background: linear-gradient(90deg,transparent,#ffb465,transparent); animation: search 1.65s ease-in-out infinite }
+    .shell:is([data-state="offline"],[data-state="error"],[data-state="unverified"],[data-state="recovery"]) .wait-line::before { animation: none }
+    .wait-title { font-size: clamp(20px,1.96vw,30px); font-weight: 550 }
+    .wait-desc { margin-top: 7px; font-size: clamp(13px,1.18vw,17px); line-height: 1.6; color: var(--muted); overflow-wrap: anywhere }
+    .retry { margin-top: 15px; padding: 5px 14px }
+    dialog { width: min(430px,calc(100vw - 36px)); color: var(--ink); border: 1px solid #7d6d5b; border-radius: 13px; padding: 26px; background: #292727; box-shadow: 0 20px 80px #0008 }
+    dialog::backdrop { background: #090909bf }
+    dialog h2 { font-size: 22px; letter-spacing: 0 }
+    dialog p { margin-top: 12px; line-height: 1.7; color: #d8cbb9 }
+    .dialog-risk { border-left: 2px solid #d58f51; padding: 2px 0 2px 12px; color: #f1cfab; font-size: 14px }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px }
+    .dialog-actions button { padding: 6px 17px }
+    @keyframes enter { from { opacity: .25; transform: translateY(6px) } to { opacity: 1; transform: none } }
+    @keyframes sweep { 0% { opacity: 0; stroke-dashoffset: 150 } 28% { opacity: .8 } 85%,100% { opacity: 0; stroke-dashoffset: -1050 } }
+    @keyframes search { from { transform: translateX(-100%) } to { transform: translateX(185%) } }
+    @media (max-width: 880px) { .panel { padding-inline: 22px } .hero-copy { width: 45%; margin-left: 22px } .photo { width: 52% } .hero { min-height: 220px } .formats { font-size: 12px } }
+    @media (max-width: 660px) {
+      .hero { height: auto; min-height: 0; flex-direction: column; align-items: stretch }
+      .hero-copy { padding: 20px 20px 0; margin: 0; width: auto } .hero-copy h1 { font-size: 39px }
+      .photo { position: relative; order: 1; right: auto; height: auto; width: 100%; max-height: 190px; display: block; margin-block: 4px 6px }
+      .stage { display: block } .panel { padding: 20px } .probe { border-left: 0; border-top: 1px solid var(--line) }
+      .mode, .action { min-width: min(46%,180px) } .wait { min-height: 170px }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important } }
+  </style>
+</head>
+<body>
+  <main class="shell" id="shell" data-state="detecting">
+    <header class="hero">
+      <svg class="photo" viewBox="0 0 1058 391" preserveAspectRatio="xMidYMid meet" role="img" id="photo" aria-label="ZH3 播放设备示意图">
+        <image href="/zh3-front.svg" width="1058" height="391"/>
+        <g class="screen" id="screen"><title id="screen-title">设备读数</title>
+          <text id="screen-rate" x="504" y="177" text-anchor="start" fill="#efba89" font-size="16" font-weight="550"></text>
+          <text x="542" y="217" font-size="43" font-weight="500"><tspan id="screen-volume"></tspan><tspan id="screen-percent" dx="2" font-size="19"></tspan></text>
+          <text id="screen-muted" x="542" y="239" fill="#ffc38b" font-size="15"></text>
+        </g>
+        <circle class="edge" pathLength="1000" cx="542" cy="200" r="72" fill="none" stroke="#ffac59" stroke-width="2.5"/>
+      </svg>
+      <div class="hero-copy">
+        <div class="brand-line">
+          <img class="brand" src="/zh3-mark.svg" width="54" height="54" alt="">
+          <h1>ZH3 <span>Control</span></h1>
+        </div>
+        <p class="attribution">适用于 Fosi Audio ZH3 的第三方工具</p>
+        <div class="identity">WASAPI Shared <span class="conn" role="status"><i class="dot" aria-hidden="true"></i><span id="connection">正在识别设备</span></span></div>
+        <dl class="formats">
+          <dt>驱动版本</dt><dd id="driver">—</dd>
+          <dt>Windows 默认输出格式</dt><dd id="output">—</dd>
+          <dt>共享混音格式</dt><dd id="mix">—</dd>
+        </dl>
+      </div>
+    </header>
+    <div class="stage">
+      <section class="panel" aria-labelledby="config-title">
+        <h2 id="config-title">周期配置</h2>
+        <div class="modes" role="group" aria-label="周期模式">
+          <button type="button" class="mode" id="fixed" aria-pressed="false" disabled><i class="radio" aria-hidden="true"></i><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="8" width="12" height="10" rx="2"/><path d="M6.5 8V5a3.5 3.5 0 0 1 7 0v3M10 12v3"/></svg>固定周期</button>
+          <button type="button" class="mode" id="range" aria-pressed="false" disabled><i class="radio" aria-hidden="true"></i><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="8" width="12" height="10" rx="2"/><path d="M6.5 8V5a3.5 3.5 0 0 1 7 0v3M10 12v3"/></svg>可变下限</button>
+        </div>
+        <div class="readout"><label for="draft" id="period-label">周期</label><span class="number draft-number"><output id="draft-output" for="draft">—</output><span class="unit">ms</span></span><span class="mark" id="mark" hidden><i id="mark-icon" aria-hidden="true"></i><span id="mark-text"></span></span></div>
+        <div class="slider">
+          <div class="slider-line"><div class="rail" id="rail"></div><input id="draft" type="range" min="0.5" max="10" step="0.5" aria-describedby="warning note" disabled></div>
+          <div class="ticks" id="ticks" aria-hidden="true"></div>
+        </div>
+        <p class="notice" id="warning" role="status"></p>
+        <p class="note" id="note">等待读取设备配置。</p>
+        <p class="message" id="message" role="status" hidden></p>
+        <div class="actions"><button type="button" class="action primary" id="apply" disabled>保存</button><button type="button" class="action" id="restore" disabled>恢复原厂设置</button><button type="button" class="action" id="retry" hidden disabled>再次重启 ZH3</button><button type="button" class="action" id="reconnect" hidden disabled>重新连接 ZH3 USB</button></div>
+        <p class="risk-note" id="risk-note"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8.7 3.4a1.5 1.5 0 0 1 2.6 0l6.2 11.2a1.5 1.5 0 0 1-1.3 2.2H3.8a1.5 1.5 0 0 1-1.3-2.2z"/><path d="M10 7v4.6m0 1.3v1.2"/></svg><span>操作前请先降低音量。高音量下的爆音有损伤听力或设备的风险。</span></p>
+      </section>
+      <section class="panel probe" aria-labelledby="probe-title">
+        <div class="probe-head"><h2 id="probe-title">实时探针</h2><button type="button" class="refresh" id="refresh" title="重新读取设备" aria-label="重新读取设备" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.1 9A8.4 8.4 0 0 0 5 7l-2 3m0-6v6h6M3.9 15A8.4 8.4 0 0 0 19 17l2-3m0 6v-6h-6"/></svg></button></div>
+        <div class="wait" id="wait" role="status"><i class="wait-line" aria-hidden="true"></i><p class="wait-title" id="wait-title">正在读取设备</p><p class="wait-desc" id="wait-desc">等待活动播放端点返回读数。</p><button type="button" class="retry" id="recheck" hidden>重新检测</button></div>
+        <div id="probe-data" hidden>
+          <div class="current"><div class="current-label">当前周期<small id="current-frames">—</small></div><div class="number current-number"><span id="current-ms">—</span><span class="unit">ms</span></div></div>
+          <table class="metrics" aria-label="实时探针周期"><tbody>
+            <tr><th scope="row">默认周期</th><td id="default-frames"></td><td id="default-ms"></td></tr>
+            <tr><th scope="row">最小周期</th><td id="min-frames"></td><td id="min-ms"></td></tr>
+            <tr><th scope="row">最大周期</th><td id="max-frames"></td><td id="max-ms"></td></tr>
+            <tr><th scope="row">步进</th><td id="step-frames"></td><td id="step-ms"></td></tr>
+          </tbody></table>
+        </div>
+      </section>
+    </div>
+  </main>
+  <dialog id="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description dialog-risk">
+    <h2 id="dialog-title"></h2><p id="dialog-description"></p>
+    <p class="dialog-risk" id="dialog-risk">请先降低音量。更改周期或重启设备时，可能出现无声、播放中断或爆音。高音量下的爆音可能损伤听力、耳机或音箱。请自行评估风险，确认操作即表示愿意自行承担相关风险。</p>
+    <div class="dialog-actions"><button type="button" id="cancel" autofocus>取消</button><button type="button" class="primary" id="confirm">确认</button></div>
+  </dialog>
+  <script>
+    'use strict';
+    const el = id => document.getElementById(id);
+    function put(id, value) {
+      if (el(id).textContent !== value) el(id).textContent = value;
+    }
+    const states = {
+      detecting: ['正在识别设备', '正在读取设备', '等待活动播放端点返回读数。'],
+      connected: ['已连接', '', ''],
+      identified: ['已连接', '播放数据暂不可用', '已识别 ZH3，等待读取活动播放端点。'],
+      offline: ['未连接', '未发现 ZH3', '连接 ZH3 后，程序会重新读取播放端点。'],
+      unverified: ['设备未通过核对', '设备未通过核对', '请检查 ZH3 的连接和驱动，然后重新检测。'],
+      writing: ['正在写入', '正在写入设备配置', '正在保存设置，请保持设备连接。'],
+      restarting: ['等待重连', '等待 ZH3 重新连接', '设备正在重启，正在等候新的播放端点。'],
+      recovery: ['可恢复设备', '播放端点暂不可用', '已核对 ZH3 的设备身份，可恢复原厂设置。'],
+      error: ['读取异常', '操作未完成', '可重新检测设备并查看当前状态。']
+    };
+    const modes = ['fixed', 'range'];
+    const metrics = ['default', 'min', 'max', 'step'];
+    const validHalf = value => Number.isInteger(value) && value >= 1 && value <= 20;
+    const positive = value => Number.isFinite(value) && value > 0;
+    const khz = hz => (hz / 1000).toLocaleString('en-US', {maximumFractionDigits: 3, useGrouping: false});
+    let status = {state: 'detecting'};
+    let draftMode = null;
+    let draftHalf = null;
+    let previousContext = '';
+    let confirmation = null;
+    let dispatched = false;
+
+    for (let index = 0; index <= 20; index++) {
+      const tick = document.createElement('span');
+      tick.style.left = index * 5 + '%';
+      if (index % 4 === 0) {
+        tick.className = 'major';
+        const label = document.createElement('b');
+        label.textContent = index === 20 ? '10 ms' : String(index / 2);
+        tick.append(label);
+      }
+      el('ticks').append(tick);
+    }
+
+    function formatText(format) {
+      if (!format || !positive(format.rate)) return '未读取';
+      const parts = [khz(format.rate) + ' kHz'];
+      if (positive(format.channels)) parts.push(format.channels === 2 ? '双声道' : format.channels + ' 声道');
+      const precision = format.valid_bits || format.bits;
+      if (positive(precision)) {
+        const encoding = String(format.encoding || '');
+        const type = /float/i.test(encoding) ? '浮点' : /pcm/i.test(encoding) ? ' PCM' : '';
+        parts.push(precision + ' 位' + type);
+      }
+      return parts.join(' · ');
+    }
+
+    function period(frames, rate, digits) {
+      return positive(frames) && positive(rate) ? (1000 * frames / rate).toFixed(digits) : '—';
+    }
+
+    function showReadings(snapshot) {
+      const mix = snapshot?.mix;
+      put('driver', snapshot?.device?.driver || (status.state === 'identified' && status.device?.driver) || '—');
+      put('output', snapshot ? formatText(snapshot.output) : '—');
+      put('mix', snapshot ? formatText(mix) : '—');
+      const rate = positive(mix?.rate) ? khz(mix.rate) + ' kHz' : '';
+      const volume = snapshot?.volume;
+      const hasVolume = Number.isInteger(volume) && volume >= 0 && volume <= 100;
+      const muted = snapshot?.muted === true;
+      put('screen-rate', rate);
+      put('screen-volume', hasVolume ? String(volume) : '');
+      put('screen-percent', hasVolume ? '%' : '');
+      put('screen-muted', muted ? '静音' : '');
+      const description = ['Fosi Audio ZH3', rate ? '混音 ' + rate : '',
+        hasVolume ? 'Windows 端点音量 ' + volume + '%' : '', muted ? '已静音' : ''].filter(Boolean).join('，');
+      el('photo').setAttribute('aria-label', description);
+      put('screen-title', description);
+      put('current-frames', positive(snapshot?.current) ? snapshot.current + ' 帧' : '—');
+      // The running stream may have a different sample rate from the endpoint mix.
+      put('current-ms', period(snapshot?.current, snapshot?.current_rate, 2));
+      for (const key of metrics) {
+        const frames = snapshot?.[key + '_frames'];
+        put(key + '-frames', positive(frames) ? frames + ' 帧' : '—');
+        const value = period(frames, mix?.rate, key === 'step' ? 3 : 2);
+        put(key + '-ms', value === '—' ? value : value + ' ms');
+      }
+    }
+
+    function device() {
+      if (status.state === 'connected') return status.snapshot?.device;
+      if (['identified','recovery','restarting'].includes(status.state)) return status.device;
+      if (status.state === 'error' && status.can_retry === true) return status.device;
+      return null;
+    }
+
+    function restartAdvice(gate) {
+      if (!gate || (gate.kind === 'ready' && !gate.panel_running)) return '';
+      if (gate.message) return gate.message;
+      const panel = gate.panel_running || gate.kind === 'panel_open' ? '请先从系统托盘退出 Fosi 面板。' : '';
+      if (gate.kind === 'needs_reboot') return panel + 'Windows 已标记 ZH3 需要重启，常规软件重启不可用。可物理拔插 ZH3。';
+      if (gate.kind === 'panel_open') return panel + '退出面板后可再次请求软件重启。';
+      return panel + '目前无法确认软件重启条件，可重新检测。';
+    }
+
+    function canTarget() {
+      return typeof status.target_token === 'string' && status.target_token.length > 0 &&
+        Boolean(device()?.usb && device()?.container) && status.state !== 'identified';
+    }
+
+    function canReconnect() {
+      const port = status.usb_reconnect;
+      return ['connected','restarting','recovery'].includes(status.state) && status.profile?.phase === 'pending' &&
+        canTarget() && Number.isInteger(port?.port) && port.port > 0 &&
+        typeof port.token === 'string' && port.token.trim().length > 0 &&
+        status.restart_gate?.kind !== 'panel_open' && status.restart_gate?.panel_running !== true;
+    }
+
+    function canEdit() {
+      const p = status.profile;
+      if (dispatched || status.state !== 'connected' || !canTarget() || !device()?.endpoint_id || p?.can_write !== true) return false;
+      if (p.mode === 'factory') return p.phase === 'active';
+      return modes.includes(p.mode) && (p.phase === 'active' || p.phase === 'mismatch');
+    }
+
+    function factoryTarget(frame = status) {
+      const target = frame.factory_target;
+      return typeof target?.usb === 'string' && target.usb.trim() && typeof target.container === 'string' &&
+        typeof target.token === 'string' && target.token.trim() ? target : null;
+    }
+
+    function canRestore() {
+      return !dispatched && !status.busy && status.state !== 'writing' && Boolean(factoryTarget());
+    }
+
+    function dirty() {
+      return Boolean(draftMode && validHalf(draftHalf) &&
+        (draftMode !== status.profile?.mode || draftHalf !== status.profile?.half_ms));
+    }
+
+    function updateConfig() {
+      const p = status.profile;
+      const connected = status.state === 'connected';
+      const pending = p?.phase === 'pending' && (connected || status.state === 'restarting' || status.state === 'recovery');
+      const edit = canEdit();
+      for (const mode of modes) {
+        const activeLock = connected && modes.includes(p?.mode) && p.mode !== mode;
+        const draftLock = edit && p?.mode === 'factory' && draftMode && draftMode !== mode;
+        const locked = activeLock || draftLock;
+        const button = el(mode);
+        button.disabled = !edit || locked;
+        button.classList.toggle('locked', locked);
+        button.setAttribute('aria-pressed', String(draftMode === mode));
+        button.title = activeLock ? '恢复原厂设置并读回后可切换模式' :
+          draftLock ? '再次点选当前模式可取消草稿' : '';
+      }
+      const d = el('draft');
+      d.disabled = !edit || !draftMode;
+      if (validHalf(draftHalf)) d.value = draftHalf / 2;
+      const amount = validHalf(draftHalf) ? (draftHalf / 2).toFixed(1) : '—';
+      d.setAttribute('aria-valuetext', amount === '—' ? '未选择' : amount + ' 毫秒');
+      put('period-label', draftMode === 'range' ? '最小周期' : draftMode === 'fixed' ? '固定周期' : '周期');
+      put('draft-output', amount);
+      el('rail').style.setProperty('--fill', (draftHalf || 0) * 5 + '%');
+      let warning = '';
+      if (validHalf(draftHalf)) {
+        const ms = draftHalf / 2;
+        if (draftMode === 'fixed' && ms < 5) {
+          warning = '固定周期低于 5 ms，可能回退到 10 ms。';
+          if (ms < 3) warning += '低于 3 ms 还可能无声。';
+        } else if (draftMode === 'range' && ms < 3) {
+          warning = '低于 3 ms，设置可能无效，或导致 ZH3 没有声音。';
+        }
+      }
+      put('warning', warning);
+      let mark = '';
+      let kind = '';
+      if (pending) {
+        mark = p.mode === 'factory' ? '已写入原厂 · 待核验' : '已保存 · 未生效';
+        kind = 'pending';
+      } else if (connected) {
+        if (p?.mode === 'unknown') mark = '配置仅供查看';
+        else if (p?.phase === 'error') mark = '核验未通过';
+        else if (dirty()) { mark = '草稿 · 未保存'; kind = 'draft'; }
+        else if (p?.phase === 'mismatch') { mark = '周期与请求不符'; kind = 'pending'; }
+        else if (p?.mode === 'factory') { mark = '当前档为原厂'; kind = 'active'; }
+        else if (modes.includes(p?.mode) && p.phase === 'active') { mark = '已生效'; kind = 'active'; }
+        else mark = p?.mode === 'custom' ? '自定义配置' : '配置未识别';
+      }
+      el('mark').hidden = !mark;
+      el('mark').dataset.kind = kind;
+      put('mark-text', mark);
+      put('mark-icon', kind === 'active' ? '✓' : kind === 'draft' ? '•' : '…');
+      let note = '等待读取设备配置。';
+      if (draftMode === 'range') note = '保留 10 ms 默认周期。';
+      else if (draftMode === 'fixed') note = '默认、最小和最大周期使用同一设定值。';
+      else if (pending && p.mode === 'factory') note = '活动播放端点确认恢复后，可重新选择周期模式。';
+      else if (connected && edit) note = '选择固定周期或可变下限。';
+      else if (canRestore()) note = '可核对并恢复这台 ZH3 所有播放档的原厂周期设置。';
+      else if (connected || status.state === 'recovery' || status.state === 'identified') note = '当前播放配置仅供查看。';
+      if (edit && p?.mode === 'factory' && draftMode) note += '再次点选当前模式可取消草稿。';
+      const named = factoryTarget()?.named_playback_count;
+      if (Number.isInteger(named) && named > 0) note += ` 这台 ZH3 有 ${named} 个播放档选用了命名配置。`;
+      put('note', note);
+      const advice = (device() || factoryTarget()) ? restartAdvice(status.restart_gate) : '';
+      // Pending profile and controller messages may both repeat a previous restart failure.
+      // Show the current restart conditions in that case. Mismatched readback keeps its own diagnosis.
+      const showReport = (connected || (status.state === 'identified' && status.snapshot)) &&
+        !(pending && advice && p.mode !== 'factory');
+      const notices = showReport ? [p?.message, status.message, advice] : [advice];
+      const unique = Array.from(new Set(notices.filter(Boolean)));
+      const message = unique.filter(line => !unique.some(other => other !== line && other.includes(line))).join(' ');
+      el('message').hidden = !message;
+      put('message', message);
+      el('apply').disabled = !(edit && dirty());
+      el('restore').disabled = !canRestore();
+      el('restore').title = !factoryTarget() ? '等待确认单台 ZH3' :
+        el('restore').disabled ? '当前操作完成后即可核对原厂设置' : '核对并恢复这台 ZH3 所有播放档的原厂周期设置';
+      el('retry').hidden = !(status.can_retry === true && typeof status.retry_token === 'string' &&
+        status.retry_token.trim() && status.restart_gate?.kind === 'ready' && !status.restart_gate.panel_running && canTarget());
+      el('retry').disabled = dispatched || el('retry').hidden;
+      el('reconnect').hidden = !canReconnect();
+      el('reconnect').disabled = dispatched || el('reconnect').hidden;
+    }
+
+    function context() {
+      const target = device();
+      const p = status.profile;
+      const format = f => f ? [f.rate, f.channels, f.valid_bits, f.bits, f.encoding, f.raw_hex] : null;
+      return JSON.stringify([status.state, status.target_token, target?.usb, target?.ks, target?.driver,
+        target?.container, target?.endpoint_id, target?.stream, target?.base_ref, target?.active_ref,
+        format(status.snapshot?.mix), format(status.snapshot?.output),
+        p?.mode, p?.half_ms, p?.phase, p?.can_write, p?.can_restore, status.can_retry, status.retry_token,
+        status.usb_reconnect?.port, status.usb_reconnect?.token]);
+    }
+
+    window.zh3Update = function(next) {
+      if (!next || !Object.hasOwn(states, next.state)) return;
+      if (next.state === 'connected' && (!next.snapshot?.device?.usb || !next.snapshot?.device?.container)) {
+        next = {...next, state: 'unverified', snapshot: null, message: '活动播放端点的设备身份不完整，请重新检测。'};
+      } else if (next.state === 'connected' && !next.snapshot.device.endpoint_id) {
+        next = {...next, state: 'identified', device: next.snapshot.device, snapshot: null, message: '已识别 ZH3，等待 Windows 提供活动播放端点。'};
+      } else if (next.state === 'identified' && !factoryTarget(next) && (!next.device?.usb || !next.device?.container)) {
+        next = {...next, state: 'unverified', snapshot: null, message: '未能核对在场设备的 USB 身份，请重新检测。'};
+      } else if (next.state === 'identified' && next.snapshot?.device &&
+        ['usb', 'container', 'endpoint_id'].some(key => next.device?.[key] && next.device[key] !== next.snapshot.device[key])) {
+        next = {...next, snapshot: null};
+      } else if (next.state === 'recovery' && (!next.device?.usb || !next.device?.container)) {
+        next = {...next, state: 'unverified', snapshot: null, message: '未能核对在场设备的 USB 身份，请重新检测。'};
+      }
+      const gateChanged = status.restart_gate?.kind !== next.restart_gate?.kind ||
+        status.restart_gate?.panel_running !== next.restart_gate?.panel_running ||
+        restartAdvice(status.restart_gate) !== restartAdvice(next.restart_gate);
+      status = next;
+      dispatched = false;
+      const newContext = context();
+      if (previousContext !== newContext) {
+        previousContext = newContext;
+        confirmation = null;
+        if (el('dialog').open) el('dialog').close();
+        const showProfile = status.state === 'connected' || (status.state === 'restarting' && status.profile?.phase === 'pending');
+        draftMode = showProfile && modes.includes(status.profile?.mode) ? status.profile.mode : null;
+        draftHalf = draftMode && validHalf(status.profile.half_ms) ? status.profile.half_ms : null;
+      } else if (el('dialog').open && (gateChanged || (confirmation?.action === 'restore' && !sameRestoreTarget(confirmation)))) {
+        confirmation = null;
+        el('dialog').close();
+      }
+      const hasReadings = status.state === 'connected' || (status.state === 'identified' && Boolean(status.snapshot));
+      el('shell').dataset.state = status.state;
+      const [connection, title, detail] = states[status.state];
+      put('connection', connection);
+      el('wait').hidden = hasReadings;
+      el('probe-data').hidden = !hasReadings;
+      put('wait-title', title);
+      put('wait-desc', hasReadings ? '' : status.message || detail);
+      const retryAvailable = ['offline', 'unverified', 'error', 'recovery', 'identified'].includes(status.state) ||
+        (status.state === 'restarting' && Boolean(device()));
+      el('recheck').hidden = !retryAvailable;
+      el('refresh').disabled = !hasReadings;
+      showReadings(hasReadings ? status.snapshot : null);
+      updateConfig();
+    };
+
+    function post(command) {
+      if (!window.ipc?.postMessage) {
+        window.zh3Update({state: 'error', message: '无法连接应用程序，请重新打开 ZH3 控制面板。'});
+        return;
+      }
+      window.ipc.postMessage(JSON.stringify(command));
+    }
+
+    for (const mode of modes) {
+      el(mode).addEventListener('click', () => {
+        if (el(mode).disabled) return;
+        if (status.profile?.mode === 'factory' && draftMode === mode) {
+          draftMode = null;
+          draftHalf = null;
+          updateConfig();
+          return;
+        }
+        draftMode = mode;
+        if (!validHalf(draftHalf)) {
+          // Seed an editable draft only after the user has chosen a mode.
+          draftHalf = mode === 'range' ? 7 : 20;
+        }
+        updateConfig();
+      });
+    }
+    el('draft').addEventListener('input', () => {
+      if (!canEdit() || !draftMode) return;
+      const value = el('draft').valueAsNumber * 2;
+      if (validHalf(value)) draftHalf = value;
+      updateConfig();
+    });
+
+    function ask(action) {
+      const restore = action === 'restore';
+      const target = restore ? factoryTarget() : device();
+      if (!target || el(action).disabled) return;
+      const retry = action === 'retry';
+      const reconnect = action === 'reconnect';
+      const period = validHalf(draftHalf) ? (draftHalf / 2).toFixed(1) + ' ms' : '';
+      const configuration = draftMode === 'fixed' ? '固定周期 ' + period : '可变下限 ' + period + '，保留 10 ms 默认周期';
+      let title = '保存设置并重启 ZH3？';
+      let explanation = '将写入' + configuration + '。重启期间声音会暂时中断。';
+      let button = '确认保存';
+      if (restore) {
+        title = '恢复这台 ZH3 所有播放档的周期设置？';
+        explanation = '程序会重新检测这台 ZH3，核对已登记的 24 位、32 位等播放档，只对有改动的档位保存原厂周期设置。未登记的档位会跳过，全程无需切换位深或采样率。已符合原厂设置时只核对读数。当前输出需要重启时，音频会暂时中断。活动播放端点返回后会读回实际周期。';
+        button = '确认核对并恢复';
+      } else if (retry) {
+        title = '再次重启 ZH3？';
+        explanation = '将再次请求 Windows 重启这台 ZH3，以便重新读取已写入的配置。重启期间声音会暂时中断。';
+        button = '确认重启';
+      } else if (reconnect) {
+        title = '重新连接 ZH3 USB？';
+        explanation = '仅对这台 ZH3 所在的 USB 端口（' + status.usb_reconnect.port + '）重新上电，音频会暂时中断。待播放端点重新出现后，程序将读回实际周期，核对已保存的设置是否生效。';
+        button = '确认重新连接';
+      }
+      if ((restore || action === 'apply') && (status.restart_gate?.kind !== 'ready' || status.restart_gate.panel_running)) {
+        if (!restore) {
+          title = '保存周期设置？';
+          explanation = '确认后将保存' + configuration + '并申请重启 ZH3。';
+        }
+        explanation += '重启条件未满足时，程序会暂缓软件重启。' +
+          (restartAdvice(status.restart_gate) || '目前无法确认软件重启条件，可重新检测。');
+      }
+      put('dialog-title', title);
+      put('dialog-description', explanation);
+      put('confirm', button);
+      confirmation = {action, usb: target.usb, container: target.container, endpoint_id: device()?.endpoint_id || '', target_token: status.target_token || ''};
+      if (restore) confirmation.factory_token = target.token;
+      if (retry) confirmation.retry_token = status.retry_token;
+      if (action === 'apply') Object.assign(confirmation, {mode: draftMode, half_ms: draftHalf});
+      if (reconnect) confirmation.port_token = status.usb_reconnect.token;
+      el('dialog').showModal();
+    }
+    el('apply').addEventListener('click', () => ask('apply'));
+    el('restore').addEventListener('click', () => ask('restore'));
+    el('retry').addEventListener('click', () => ask('retry'));
+    el('reconnect').addEventListener('click', () => ask('reconnect'));
+    el('cancel').addEventListener('click', () => el('dialog').close());
+    el('dialog').addEventListener('close', () => { confirmation = null; });
+    function sameRestoreTarget(command) {
+      const target = factoryTarget();
+      return canRestore() && command.usb === target.usb && command.container === target.container && command.factory_token === target.token;
+    }
+    el('confirm').addEventListener('click', () => {
+      const command = confirmation;
+      if (!command || el(command.action).disabled) return;
+      if (command.action === 'restore' ? !sameRestoreTarget(command) :
+          command.usb !== device()?.usb || command.container !== device()?.container) return;
+      if (command.endpoint_id !== (device()?.endpoint_id || '') || command.target_token !== (status.target_token || '') ||
+          (command.action === 'reconnect' && command.port_token !== status.usb_reconnect?.token) ||
+          (command.action === 'retry' && command.retry_token !== status.retry_token)) return;
+      el('dialog').close();
+      confirmation = null;
+      dispatched = true;
+      updateConfig();
+      post(command);
+    });
+    el('refresh').addEventListener('click', () => post({action: 'refresh'}));
+    el('recheck').addEventListener('click', () => post({action: 'refresh'}));
+    post({action: 'ready'});
+  </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+ZH3 Control
+Copyright © 2026 ZH3 Control Project
+
+软件代码
+本项目中由 ZH3 Control Project 有权许可的程序代码，包括 Rust 源码、构建与测试代码、界面的 HTML、CSS、JavaScript，以及它们编译成的程序部分，采用 PolyForm Noncommercial License 1.0.0。
+Required Notice: Copyright © 2026 ZH3 Control Project — ZH3 Control
+
+可以在许可证允许的非商业用途及其他明列的允许用途下使用、修改、分发程序和修改版。分发时，应向接收者提供上述 Required Notice，以及完整许可证或其网址。该许可未要求随修改版 EXE 公开源代码。商业用途如超出许可证已授予的范围，须另获权利人许可。
+
+完整条款见 LICENSES/PolyForm-Noncommercial-1.0.0.txt
+https://polyformproject.org/licenses/noncommercial/1.0.0
+
+原创图像和文档
+由 ZH3 Control Project 有权许可的面板插画、应用图标（SVG、ICO 及其内嵌版本）、项目文档和截图中的原创内容采用 Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International（CC BY-NC-SA 4.0，署名—非商业性使用—相同方式共享）。
+署名为「ZH3 Control Project」。分享原作或改作时，应以合理方式保留署名、许可标识和已提供的原作链接，并说明所作修改、保留已有修改说明。公开分享改作时，应依该许可的相同方式共享条款授权。程序中包含这些素材时，素材仍按本段许可提供。
+
+完整条款见 LICENSES/CC-BY-NC-SA-4.0.txt
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+第三方权利
+实测截图 docs/images/real-44100hz.png 展示 REAL 程序。截图中的 REAL 界面、名称及其他第三方元素由各自权利人保留，项目的 CC 许可仅适用于截图中项目有权许可的原创部分。REAL 项目来源为 https://github.com/miniant-git/REAL 。本项目仅附实测截图，REAL 程序由其上游独立分发。
+REAL 上游采用 MIT License，原版权声明和许可全文见 LICENSES/REAL-MIT.txt。
+
+以上许可仅覆盖 ZH3 Control Project 可授权的部分。第三方库、数据和运行库各按其自身条款使用，详见 THIRD-PARTY-NOTICES.txt 和 LICENSES/。Fosi Audio、ZH3、Microsoft、Windows 和 WebView2 等名称用于标识兼容产品或依赖项，各权利人的商标、标识和产品外观权利由其保留。转发项目或修改版时，请随附适用的第三方声明和许可文本。

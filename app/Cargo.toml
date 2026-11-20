@@ -1,0 +1,24 @@
+[package]
+name = "zh3-control"
+version = "1.0.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "ZH3-Control"
+path = "src/main.rs"
+test = false
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tao = "0.34"
+wry = { version = "0.54", default-features = false, features = ["os-webview", "protocol"] }
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_Devices_DeviceAndDriverInstallation", "Win32_Devices_Properties", "Win32_Devices_Usb", "Win32_Media_Audio", "Win32_Media_Audio_Endpoints", "Win32_System_Registry", "Win32_System_Com", "Win32_System_Com_StructuredStorage", "Win32_System_Variant", "Win32_UI_Shell_PropertiesSystem", "Win32_UI_WindowsAndMessaging", "Win32_System_Threading", "Win32_System_Diagnostics_ToolHelp", "Win32_System_IO", "Win32_Storage_FileSystem", "Win32_Globalization", "Win32_Security"] }
+
+[build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+strip = "debuginfo"
+lto = "thin"

@@ -1,0 +1,39 @@
+{
+  "readonly": {
+    "snapshot": {
+      "device": {
+        "usb": "example-usb",
+        "ks": "example-ks",
+        "container": "example-container",
+        "driver": "6.16.0.15392",
+        "endpoint_id": "example-output",
+        "stream": "StreamFormatOut_02",
+        "base_ref": "pcm_out_02_c_00",
+        "active_ref": "pcm_out_02_c_00"
+      },
+      "mix": {
+        "rate": 44100,
+        "channels": 2,
+        "bits": 32,
+        "valid_bits": 32,
+        "encoding": "Float",
+        "raw_hex": "FEFF020044AC0000206205000800200016002000030000000300000000001000800000AA00389B71"
+      },
+      "output": {
+        "rate": 44100,
+        "channels": 2,
+        "bits": 32,
+        "valid_bits": 24,
+        "encoding": "PCM",
+        "raw_hex": "FEFF020044AC0000206205000800200016001800030000000100000000001000800000AA00389B71"
+      },
+      "current": 441,
+      "current_rate": 44100,
+      "volume": 50,
+      "default_frames": 441,
+      "min_frames": 441,
+      "max_frames": 441,
+      "step_frames": 1
+    }
+  }
+}

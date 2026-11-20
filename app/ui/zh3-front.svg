@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1058 391" width="1058" height="391">
+  <defs>
+    <linearGradient id="lid" x1="0" x2=".92" y1="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#777873"/><stop offset=".31" stop-color="#51524e"/><stop offset=".76" stop-color="#373835"/><stop offset="1" stop-color="#52524b"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2=".96" y2=".64">
+      <stop stop-color="#525450"/><stop offset=".32" stop-color="#454743"/><stop offset=".62" stop-color="#353734"/><stop offset="1" stop-color="#282b28"/>
+    </linearGradient>
+    <linearGradient id="chamfer" x1="0" y1="0" x2=".84" y2="1">
+      <stop stop-color="#9b9b92"/><stop offset=".32" stop-color="#666962"/><stop offset=".73" stop-color="#343632"/><stop offset="1" stop-color="#111311"/>
+    </linearGradient>
+    <linearGradient id="steel" x1=".16" y1="0" x2=".83" y2="1">
+      <stop stop-color="#aaa99e"/><stop offset=".15" stop-color="#575a54"/><stop offset=".46" stop-color="#212521"/><stop offset=".71" stop-color="#65675e"/><stop offset=".9" stop-color="#41443e"/><stop offset="1" stop-color="#98998f"/>
+    </linearGradient>
+    <radialGradient id="falloff"><stop stop-color="#090b09" stop-opacity=".7"/><stop offset=".62" stop-color="#0d0e0c" stop-opacity=".43"/><stop offset="1" stop-color="#11120f" stop-opacity="0"/></radialGradient>
+    <linearGradient id="glass" x1=".24" y1="0" x2=".74" y2="1">
+      <stop stop-color="#1e2524"/><stop offset=".48" stop-color="#0c1010"/><stop offset="1" stop-color="#080c0c"/>
+    </linearGradient>
+    <linearGradient id="copper-edge" x1=".08" y1=".05" x2=".90" y2=".95">
+      <stop stop-color="#ffcd8e"/><stop offset=".25" stop-color="#ef9953"/><stop offset=".55" stop-color="#a74c1f"/><stop offset=".77" stop-color="#713317"/><stop offset="1" stop-color="#c9773a"/>
+    </linearGradient>
+    <linearGradient id="copper" x1=".18" y1=".04" x2=".86" y2=".95">
+      <stop stop-color="#ffc07b"/><stop offset=".30" stop-color="#eea065"/><stop offset=".48" stop-color="#d77c3c"/><stop offset=".72" stop-color="#c96a30"/><stop offset="1" stop-color="#e38b48"/>
+    </linearGradient>
+    <pattern id="grain" width="180" height="8" patternUnits="userSpaceOnUse">
+      <path d="M1 .5h105m15 0h36M24 4.5h62m22 0h71" stroke="#fff" stroke-width=".6" opacity=".049"/>
+      <path d="M6 2.5h49m25 0h91M2 6.5h113" stroke="#080a07" stroke-width=".6" opacity=".12"/>
+    </pattern>
+    <pattern id="vents" width="12" height="8" patternUnits="userSpaceOnUse" patternTransform="skewX(-36)">
+      <path d="M4 1v5" stroke="#111512" stroke-width="3" stroke-linecap="round"/>
+      <path d="M6 1v5" stroke="#9c9c8f" stroke-width=".8" opacity=".52"/>
+    </pattern>
+    <g id="screw">
+      <circle r="5.2" fill="#20231f" stroke="#696c62" stroke-width=".8"/>
+      <path d="m-2.2 1.3 4.4-2.6" stroke="#0d0f0d" stroke-width="1.9" stroke-linecap="round"/>
+      <path d="m-1.7 2 4-2.4" stroke="#73766a" stroke-width=".65"/>
+    </g>
+    <g id="jack">
+      <ellipse cy="2" rx="29" ry="28" fill="#181b17"/>
+      <circle r="27" fill="url(#steel)" stroke="#111510" stroke-width="1"/>
+      <circle r="22.8" fill="#202420" stroke="#989a8d" stroke-opacity=".6" stroke-width=".9"/>
+      <circle r="17" fill="#111411" stroke="#73776c" stroke-width="2.5"/>
+      <circle r="12.7" fill="#070908" stroke="#272c25" stroke-width="1.6"/>
+      <path d="M-9.7 7.9a12.6 12.6 0 0 0 19.4 0" fill="none" stroke="#5b5741" stroke-width="1.7"/>
+    </g>
+  </defs>
+
+  <!-- The chassis has a slightly elevated sightline so the feet and machined lid are visible. -->
+  <ellipse cx="533" cy="318" rx="510" ry="30" fill="url(#falloff)"/>
+  <g fill="#141714" stroke="#3b3d36">
+    <path d="M129 291h113l-5 20H136z"/><path d="M827 291h113l-7 20H832z"/>
+  </g>
+  <path d="M44 126 77 91q4-5 13-5h876q8 0 13 6l33 34v157q0 13-13 17H59q-15-2-15-18z" fill="#20231f" stroke="#171916" stroke-width="2.5"/>
+  <path d="m47 126 32-33q5-5 12-5h874q7 0 12 5l33 33z" fill="url(#lid)"/>
+  <path d="M81 94q4-4 12-4h867" fill="none" stroke="#bbbbae" stroke-opacity=".46"/>
+  <path d="m67 110 14-14h894l13 14z" fill="url(#grain)"/>
+  <path d="M716 100h185l7 8H709z" fill="url(#vents)"/>
+  <path d="M69 119h920" stroke="#242722" stroke-width="1"/>
+  <path d="M61 122h934q16 0 16 15v144q0 16-15 17H60q-15-1-15-17V137q0-15 16-15z" fill="url(#chamfer)"/>
+  <rect x="49" y="127" width="958" height="165" rx="11" fill="url(#plate)"/>
+  <rect x="49" y="127" width="958" height="165" rx="11" fill="url(#grain)"/>
+  <path d="M62 125h930" stroke="#c2c1b6" opacity=".4"/>
+  <path d="M60 290h936" stroke="#111510" opacity=".78"/>
+  <g>
+    <use href="#screw" x="68" y="144"/><use href="#screw" x="988" y="144"/>
+    <use href="#screw" x="68" y="274"/><use href="#screw" x="988" y="274"/>
+  </g>
+
+  <!-- A single milled recess groups the two headphone sockets. -->
+  <rect x="143" y="159" width="192" height="85" rx="40" fill="none" stroke="#a2a499" stroke-opacity=".36" transform="translate(0 1)"/>
+  <rect x="143" y="159" width="192" height="85" rx="40" fill="#343832" stroke="#22251f"/>
+  <rect x="147" y="163" width="184" height="77" rx="37" fill="url(#grain)"/>
+  <use href="#jack" transform="translate(198 201) scale(1.13)"/>
+  <use href="#jack" transform="translate(282 201) scale(.88)"/>
+  <g fill="none" stroke="#a6a89a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".76">
+    <path d="M234 262v-3a5.4 5.4 0 0 1 10.8 0v3m-10.8-1.5h2.4v4.1h-2.4zm8.4 0h2.4v4.1h-2.4z"/>
+    <path d="M179 260h45m31 0h44" opacity=".45"/>
+  </g>
+
+  <g transform="translate(542 200)">
+    <ellipse cy="3" rx="86" ry="85" fill="#151914" opacity=".85"/>
+    <circle r="85" fill="url(#steel)" stroke="#242722" stroke-width="1.2"/>
+    <circle r="81.8" fill="#262b26" stroke="#161a16" stroke-width="1.1"/>
+    <circle r="77.6" fill="#131814" stroke="#666b5f" stroke-width="1"/>
+    <circle r="72.9" fill="url(#glass)" stroke="#050706" stroke-width="2.4"/>
+    <path d="M-63-32a70.7 70.7 0 0 1 67-38.4" fill="none" stroke="#a6b7ad" stroke-opacity=".23" stroke-width="1.2"/>
+    <path d="M39 59a70.7 70.7 0 0 1-51 10.7" fill="none" stroke="#58665e" stroke-opacity=".3"/>
+  </g>
+
+  <g transform="translate(836 202)">
+    <ellipse cx="7" cy="11" rx="103" ry="91" fill="url(#falloff)"/>
+    <circle cy="2.5" r="86" fill="#131713" stroke="#43473e" stroke-width="1.3"/>
+    <circle r="82.8" fill="#242823" stroke="url(#steel)" stroke-width="2.6"/>
+    <circle cy="2.7" r="77.9" fill="#68361d" stroke="#20170f" stroke-width="1.8"/>
+    <circle r="76.2" fill="url(#copper-edge)"/>
+    <circle r="72.1" fill="none" stroke="#66391f" stroke-width="5" stroke-dasharray="1.3 3.42" opacity=".82"/>
+    <circle r="69.1" fill="url(#copper)" stroke="#f4ad6c" stroke-width="1.3"/>
+    <g fill="none" stroke="#79431e" stroke-opacity=".24" stroke-width=".9">
+      <circle r="65"/><circle r="62.6"/><circle r="59.7"/><circle r="55.8"/><circle r="51.6"/>
+    </g>
+    <path d="M-60-25a65 65 0 0 1 52-39.4m-43.6 29.7a62 62 0 0 1 32-24.1" fill="none" stroke="#ffdb9f" stroke-opacity=".53" stroke-linecap="round"/>
+    <path d="m34-55-5.1 8.4" stroke="#ffa96c" stroke-width="5.2" stroke-linecap="round"/>
+    <path d="m33.7-55.5-5.1 8.4" stroke="#77401e" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "Classes": {
+    "AUDIO": {
+      "Present": {
+        "Links": [
+          "example-audio\\pcm_out_02_c_00_example"
+        ]
+      }
+    },
+    "RENDER": {
+      "Present": {
+        "Links": [
+          "example-render\\pcm_out_02_c_00_example"
+        ]
+      }
+    }
+  }
+}

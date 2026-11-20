@@ -1,0 +1,44 @@
+{
+  "Classes": {
+    "AUDIO": {
+      "Present": {
+        "Links": [
+          "example-audio\\pcm_out_02_c_00"
+        ]
+      },
+      "TargetInterfaces": [
+        {
+          "Present": true,
+          "DeviceInterfaceProperties": {
+            "PacketSizeConstraints": {
+              "Status": "Absent"
+            },
+            "PacketSizeConstraints2": {
+              "Status": "Absent"
+            }
+          }
+        }
+      ]
+    },
+    "RENDER": {
+      "Present": {
+        "Links": [
+          "example-render\\pcm_out_02_c_00"
+        ]
+      },
+      "TargetInterfaces": [
+        {
+          "Present": true,
+          "DeviceInterfaceProperties": {
+            "PacketSizeConstraints": {
+              "Status": "Absent"
+            },
+            "PacketSizeConstraints2": {
+              "Status": "Absent"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

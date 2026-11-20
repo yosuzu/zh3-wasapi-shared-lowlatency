@@ -1,0 +1,57 @@
+ZH3 Control
+Copyright © 2026 ZH3 Control Project
+
+中文版本：LICENSE
+
+Software code
+The PolyForm Noncommercial License 1.0.0 applies to the program code that ZH3
+Control Project has the right to license. This includes the Rust source code,
+build and test code, the HTML, CSS and JavaScript used in the interface, and
+the portions of the compiled program derived from that code.
+Required Notice: Copyright © 2026 ZH3 Control Project — ZH3 Control
+
+You may use, modify and distribute the program and modified versions for
+noncommercial purposes and other purposes expressly permitted by the license.
+When distributing the software, give recipients the Required Notice above
+and either the full license terms or their URL. The license allows you to
+distribute a modified EXE without publishing its source code. Commercial uses
+outside the scope of the license require separate permission from the rights
+holder.
+
+Full terms: LICENSES/PolyForm-Noncommercial-1.0.0.txt
+https://polyformproject.org/licenses/noncommercial/1.0.0
+
+Original artwork and documentation
+The Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+license (CC BY-NC-SA 4.0) applies to the panel illustration, application icon
+(SVG, ICO and embedded versions), project documentation and original content
+in screenshots, to the extent that ZH3 Control Project may license them.
+
+Credit “ZH3 Control Project”. When sharing the original work or an adaptation,
+retain the attribution, license notice and any supplied link to the original in
+a reasonable manner. Indicate any changes you made and retain notices of prior
+modifications. When publicly sharing an adaptation, license it in accordance
+with the ShareAlike terms. These assets retain this license when included in
+the program.
+
+Full terms: LICENSES/CC-BY-NC-SA-4.0.txt
+https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+Third-party rights
+The test screenshot at docs/images/real-44100hz.png shows the REAL application.
+The rights to the REAL interface, name and other third-party elements belong to
+their respective rights holders. The project's CC license covers only the
+original elements in the screenshot that the project has the right to license.
+This project includes the test screenshot only. REAL is distributed separately
+by its upstream project:
+https://github.com/miniant-git/REAL
+REAL uses the MIT License. The original copyright notice and full license text
+are in LICENSES/REAL-MIT.txt.
+
+The project licenses above cover only material that ZH3 Control Project has
+the right to license. Third-party libraries, data and runtimes have their own
+terms, as detailed in THIRD-PARTY-NOTICES.txt and LICENSES/. Names such as
+Fosi Audio, ZH3, Microsoft, Windows and WebView2 identify compatible products
+or dependencies. The respective rights holders retain their rights in
+trademarks, logos and product appearance. When redistributing the project or a
+modified version, include the applicable third-party notices and license texts.

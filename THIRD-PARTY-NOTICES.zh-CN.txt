@@ -1,0 +1,38 @@
+ZH3 Control — 第三方声明
+Windows x64 · 1.0.0
+
+英文原文、依赖清单和完整版权及许可声明见同目录的 THIRD-PARTY-NOTICES.txt。
+LICENSE 所列项目许可适用于本项目自行创作的内容。第三方组件及其声明各自适用原有条款。
+
+Microsoft Edge WebView2
+本程序链接 Microsoft.Web.WebView2 1.0.3650.58 中的 x64 WebView2 Loader。
+微软的 SDK 许可和第三方声明分别收录于 LICENSES/Microsoft-WebView2-SDK-LICENSE.txt
+和 LICENSES/Microsoft-WebView2-SDK-NOTICE.txt。供 Rust 调用 WebView2 的绑定代码
+单独采用 MIT 许可，全文见 THIRD-PARTY-NOTICES.txt。系统已安装的 Edge WebView2 Runtime
+按微软条款独立运行。发行包不含浏览器运行时或其安装程序。
+SDK 来源：https://www.nuget.org/packages/Microsoft.Web.WebView2/1.0.3650.58
+
+Rust 和 Visual C++ 运行库
+本程序包含 Rust 标准库代码。该标准库提供 MIT 和 Apache-2.0 两种许可选择，本次分发选用 MIT。
+工具链中各独立组件的声明及例外条款收录于 LICENSES/Rust-Std-COPYRIGHT.html。
+
+使用 MSVC 构建时，微软 C 运行库代码通过静态链接编入可执行文件。微软对这些代码的权利
+受适用的 Visual Studio 和 Windows SDK 条款约束。Windows ZIP 包含已链接的应用程序代码，
+不单独分发微软的 .lib、DLL、SDK、安装程序或可再发行组件包。
+再分发时，适用条款要求分发者和外部最终用户同意相应条款，对微软可分发代码
+（Distributable Code）提供至少同等程度的保护。项目自身的许可不对这些代码重新授权。
+https://visualstudio.microsoft.com/license-terms/vs2026-ga-community/
+https://learn.microsoft.com/en-us/visualstudio/releases/2026/redistribution
+https://learn.microsoft.com/en-us/legal/windows-sdk/redist#static-lib-files
+
+Windows、字体及硬件
+Windows 系统库、系统已安装的界面字体、Fosi USB 驱动、其控制面板及设备固件均由外部提供。
+设备插图和应用图标在本项目有权许可的范围内适用 LICENSE 中的原创图像许可。
+产品名称及第三方标识用于识别相应产品，商标权由各自权利人保留。
+
+Rust 软件包声明
+THIRD-PARTY-NOTICES.txt 中的「Package and version | License used」列出 Windows x64
+构建所锁定版本的常规依赖和构建依赖，包括在编译时运行的过程宏。清单中的构建依赖可能只在
+编译阶段使用。每一行依次列出包名、版本及本次分发为该包选用的许可。
+清单后附上游源码版权声明、各组件特有的条款及授权全文。多个条目共用相同文本时，
+条目集中列在该文本上方，全文只收录一次。
